@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoordinatesFromCanvas", "CoordinatesFromCanvas.csproj", "{0C833F28-DF26-4F03-AED5-457F408F9C8B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C833F28-DF26-4F03-AED5-457F408F9C8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C833F28-DF26-4F03-AED5-457F408F9C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C833F28-DF26-4F03-AED5-457F408F9C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C833F28-DF26-4F03-AED5-457F408F9C8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE09D826-F4A9-4E53-B0F6-B9D36B4005A7}
+	EndGlobalSection
+EndGlobal
