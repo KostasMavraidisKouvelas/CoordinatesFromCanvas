@@ -11,16 +11,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoordinatesFromCanvas.Models;
+using CoordinatesFromCanvas.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Web.Http;
 
-namespace CoordinatesFromCanvas
+namespace CoordinatesFromCanvas.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IConfiguration config = null;
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            this.config = config;
         }
 
         public IConfiguration Configuration { get; }
@@ -28,10 +30,14 @@ namespace CoordinatesFromCanvas
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(this.Configuration.GetConnectionString("AppDb")));
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin());
+            });
             services.AddControllers();
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(this.config.GetConnectionString("AppDb")));
+           
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoordinatesFromCanvas", Version = "v1" });
@@ -41,6 +47,8 @@ namespace CoordinatesFromCanvas
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -48,11 +56,12 @@ namespace CoordinatesFromCanvas
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoordinatesFromCanvas v1"));
             }
 
-            app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
+           app.UseHttpsRedirection();
+             
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseCors();
+          app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

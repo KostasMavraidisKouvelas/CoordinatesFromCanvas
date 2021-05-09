@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 
-namespace CoordinatesFromCanvas.Models
+namespace CoordinatesFromCanvas.Api.Models
 {
     public class AppDbContext : DbContext
     {
