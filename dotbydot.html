@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>dotbydot</h1>
+
+<form id="form"> 
+  <label for="coorX">Coordinate X:</label>
+  <input type="number" id="coorX" name="coorX" step="0.001" min="40" max="360" required>
+  <br><br>
+  <label for="coorY">Coordinate Y:</label>
+  <input type="number" id="coorY" name="coorY" step="0.001" min="40" max="160" required>
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+<br>
+<canvas id="myCanvas" width="400" height="200" style="border:1px solid #000000;"></canvas>
+
+<p>Note: click on the canvas to update the input boxes with the coordinates of the click.</p>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+
+/* Classes */
+
+class Item {
+    constructor(timestamp, circle) {
+        this.x = circle.x;
+        this.y = circle.y;
+        this.Diameter = 2 * circle.r;
+        this.Color = circle.c;
+    }
+}
+
+/* Constants */
+
+const form = document.getElementById('form');
+const coorX = document.getElementById('coorX');
+const coorY = document.getElementById('coorY');
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+
+/* Event handlers */
+
+form.onsubmit = submitForm;
+canvas.onclick = handleCanvasClick;
+
+/* Functions */
+
+function submitForm(event) {
+    clearCanvas();
+    var circle = createCircleWithRandomRadius(coorX.value, coorY.value);
+    drawCircle(circle);
+    storeItemToDB(circle);
+    event.preventDefault();    
+}
+
+function handleCanvasClick(event) {
+    clearCanvas();
+    click = calculateCanvasClickCoordinates(event);
+    updateCoordinateInputs(click);
+    var circle = createCircleWithRandomRadius(coorX.value, coorY.value);
+    drawCircle(circle);
+    storeItemToDB(circle);
+}
+
+function updateCoordinateInputs(click) {
+    coorX.value = click.x;
+    coorY.value = click.y;
+}
+
+function storeItemToDB(circle) {
+  var timestamp = new Date().getTime();
+  var item = new Item(timestamp, circle);
+
+  var options = {
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json'
+    },
+    crossdomain: true
+  };
+  
+ // fetch('https://localhost:44397/api/items', {method: 'POST', headers: { 'content-type': 'application/json'},  body: JSON.stringify(item)});
+  axios.post('https://localhost:44397/api/items',  item);
+
+}
+
+// Canvas
+
+function createCircleWithRandomRadius(x, y) {
+    var r = generateRandomRadius();
+    var c = generateRandomColor();
+    return { x, y, r, c };
+}
+
+function drawCircle(circle) {
+    ctx.beginPath();
+    ctx.arc(circle.x, circle.y, circle.r, 0, 2 * Math.PI);
+    ctx.fillStyle = circle.c;
+    ctx.fill();
+    ctx.stroke();
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, 400, 200);
+}
+
+function calculateCanvasClickCoordinates(event) {
+    var rect = canvas.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    return { x, y };
+}
+
+// Utility
+
+function generateRandomRadius() {
+    return generateRandomIntInclusive(10, 40);
+}
+
+function generateRandomIntInclusive(min, max) {
+    var min = Math.ceil(min);
+    var max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function generateRandomColor() {
+    return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
+
+
+</script> 
+
+</body>
+</html>
